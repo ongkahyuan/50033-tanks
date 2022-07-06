@@ -18,6 +18,7 @@ public class TankHealth : MonoBehaviour
     private bool m_Dead;
     public UnityEvent enemyDeath;
     public UnityEvent playerDeath;
+    public bool GodMode = false;
 
 
     private void Awake()
@@ -74,7 +75,8 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.gameObject.SetActive(true);
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
-        if (gameObject.tag == "Enemy")
+        gameObject.SetActive(false);
+        if (gameObject.tag == "EnemyScanner" | gameObject.tag == "EnemyChaser")
         {
             enemyDeath.Invoke();
         }
@@ -83,6 +85,5 @@ public class TankHealth : MonoBehaviour
             playerDeath.Invoke();
         }
 
-        gameObject.SetActive(false);
     }
 }

@@ -5,19 +5,30 @@ using UnityEngine;
 [Serializable]
 public class TankManager
 {
-    
+
     public Color m_PlayerColor;
     public Transform m_SpawnPoint;
     [HideInInspector] public int m_PlayerNumber;
     [HideInInspector] public string m_ColoredPlayerText;
     [HideInInspector] public GameObject m_Instance;
     [HideInInspector] public int m_Wins;
+    public string tankType;
 
 
     private TankMovement m_Movement;
     private TankShooting m_Shooting;
     private GameObject m_CanvasGameObject;
     private StateController m_StateController;
+
+    public void SetType(string type)
+    {
+        tankType = type;
+    }
+
+    public void SetSpawn(Transform spawn)
+    {
+        m_SpawnPoint = spawn;
+    }
 
     public void SetupAI(List<Transform> wayPointList)
     {
@@ -28,11 +39,19 @@ public class TankManager
         m_Shooting.m_PlayerNumber = m_PlayerNumber;
 
         m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
-        m_ColoredPlayerText = $"<color=#{ColorUtility.ToHtmlStringRGB(m_PlayerColor)}>PLAYER {m_PlayerNumber}</color>";
 
+        if (tankType == "EnemyChaser")
+        {
+            m_PlayerColor = Color.red;
+        }
+        else
+        {
+            m_PlayerColor = Color.green;
+        }
         MeshRenderer[] renderers = m_Instance.GetComponentsInChildren<MeshRenderer>();
-
         for (int i = 0; i < renderers.Length; i++) renderers[i].material.color = m_PlayerColor;
+        m_ColoredPlayerText = $"<color=#{ColorUtility.ToHtmlStringRGB(m_PlayerColor)}>PLAYER {m_PlayerNumber}</color>";
+        // for (int i = 0; i < renderers.Length; i++) renderers[i].material.color = m_PlayerColor;
     }
 
 
@@ -44,6 +63,8 @@ public class TankManager
 
         m_Movement.m_PlayerNumber = m_PlayerNumber;
         m_Shooting.m_PlayerNumber = m_PlayerNumber;
+
+        m_PlayerColor = Color.blue;
 
         m_ColoredPlayerText = $"<color=#{ColorUtility.ToHtmlStringRGB(m_PlayerColor)}>PLAYER {m_PlayerNumber}</color>";
 

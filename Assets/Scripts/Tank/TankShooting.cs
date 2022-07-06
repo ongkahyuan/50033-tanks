@@ -37,28 +37,30 @@ public class TankShooting : MonoBehaviour
     private void Update()
     {
         m_AimSlider.value = m_MinLaunchForce;
+        if (gameObject.tag == "Player")
+        {
+            if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
+            {
+                m_CurrentLaunchForce = m_MaxLaunchForce;
+                Fire(m_CurrentLaunchForce, 1);
+            }
+            else if (Input.GetButtonDown(m_FireButton))
+            {
+                m_Fired = false;
+                m_CurrentLaunchForce = m_MinLaunchForce;
 
-        if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
-        {
-            m_CurrentLaunchForce = m_MaxLaunchForce;
-            Fire(m_CurrentLaunchForce, 1);
-        }
-        else if (Input.GetButtonDown(m_FireButton))
-        {
-            m_Fired = false;
-            m_CurrentLaunchForce = m_MinLaunchForce;
-
-            m_ShootingAudio.clip = m_ChargingClip;
-            m_ShootingAudio.Play();
-        }
-        else if (Input.GetButton(m_FireButton) && !m_Fired)
-        {
-            m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
-            m_AimSlider.value = m_CurrentLaunchForce;
-        }
-        else if (Input.GetButtonUp(m_FireButton) && !m_Fired)
-        {
-            Fire(m_CurrentLaunchForce, 1);
+                m_ShootingAudio.clip = m_ChargingClip;
+                m_ShootingAudio.Play();
+            }
+            else if (Input.GetButton(m_FireButton) && !m_Fired)
+            {
+                m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+                m_AimSlider.value = m_CurrentLaunchForce;
+            }
+            else if (Input.GetButtonUp(m_FireButton) && !m_Fired)
+            {
+                Fire(m_CurrentLaunchForce, 1);
+            }
         }
     }
 
@@ -79,5 +81,5 @@ public class TankShooting : MonoBehaviour
 
         m_CurrentLaunchForce = m_MinLaunchForce;
     }
-    
+
 }
