@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7111563126282955592}
   - component: {fileID: 7111563126282955590}
   - component: {fileID: 7111563126282955593}
+  - component: {fileID: 3787403707837673316}
   m_Layer: 0
   m_Name: Health Pack
   m_TagString: Untagged
@@ -156,3 +157,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 6
   m_CollisionDetection: 0
+--- !u!114 &3787403707837673316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7111563126282955599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68ed2d1d3bc2b4b1dbe5bd40353ecba1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: de65f689aa3d24ebab7dc8ffa149adfc, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7111563126282955592}
+        m_TargetAssemblyTypeName: HealthPackController, Assembly-CSharp
+        m_MethodName: EndRound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

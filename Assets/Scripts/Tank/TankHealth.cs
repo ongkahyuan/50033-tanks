@@ -9,6 +9,7 @@ public class TankHealth : MonoBehaviour
     public Color m_FullHealthColor = Color.green;
     public Color m_ZeroHealthColor = Color.red;
     public GameObject m_ExplosionPrefab;
+    public GameObject healthPackPrefab;
 
     private AudioSource m_ExplosionAudio;
     private ParticleSystem m_ExplosionParticles;
@@ -63,6 +64,14 @@ public class TankHealth : MonoBehaviour
         m_Dead = true;
 
         m_ExplosionParticles.transform.position = transform.position;
+        if (Random.Range(0f, 1f) > 0.5f)
+        {
+            Instantiate(healthPackPrefab, transform.position + new Vector3(0f, 1.5f, 0f), Quaternion.identity);
+        }
+        else
+        {
+            Debug.Log("Too Bad");
+        }
         m_ExplosionParticles.gameObject.SetActive(true);
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();

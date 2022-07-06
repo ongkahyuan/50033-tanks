@@ -7,6 +7,7 @@ public class HealthPackController : MonoBehaviour
 {
     private BoxCollider colliderComp;
     public UnityEvent onHealthPickup;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,5 +28,10 @@ public class HealthPackController : MonoBehaviour
             Debug.Log("Got items");
             Destroy(gameObject);
         }
+    }
+
+    public void EndRound()
+    {
+        Destroy(gameObject);
     }
 }

@@ -10647,6 +10647,8 @@ MonoBehaviour:
   m_FullHealthColor: {r: 0, g: 1, b: 0, a: 1}
   m_ZeroHealthColor: {r: 1, g: 0, b: 0, a: 1}
   m_ExplosionPrefab: {fileID: 151086, guid: ee49a9a8678ecf8468eb488e1ac8d42b, type: 3}
+  healthPackPrefab: {fileID: 7111563126282955599, guid: ce637b9ae6fe845b3ae116620a808a98,
+    type: 3}
 --- !u!114 &114705808874343242
 MonoBehaviour:
   m_ObjectHideFlags: 0
