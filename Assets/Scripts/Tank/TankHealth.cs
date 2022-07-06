@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class TankHealth : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class TankHealth : MonoBehaviour
     private ParticleSystem m_ExplosionParticles;
     private float m_CurrentHealth;
     private bool m_Dead;
+    public UnityEvent enemyDeath;
+    public UnityEvent playerDeath;
 
 
     private void Awake()
@@ -68,13 +71,17 @@ public class TankHealth : MonoBehaviour
         {
             Instantiate(healthPackPrefab, transform.position + new Vector3(0f, 1.5f, 0f), Quaternion.identity);
         }
-        else
-        {
-            Debug.Log("Too Bad");
-        }
         m_ExplosionParticles.gameObject.SetActive(true);
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
+        if (gameObject.tag == "Enemy")
+        {
+            enemyDeath.Invoke();
+        }
+        if (gameObject.tag == "Player")
+        {
+            playerDeath.Invoke();
+        }
 
         gameObject.SetActive(false);
     }

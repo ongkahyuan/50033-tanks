@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
     private TankManager m_RoundWinner;
     private TankManager m_GameWinner;
     public UnityEvent RoundEnd;
-
+    private int m_KillNumber;
+    private bool playerAlive = true;
 
     private void Start()
     {
@@ -71,7 +72,8 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
 
-        if (m_GameWinner != null) SceneManager.LoadScene(0);
+        // if (m_GameWinner != null) SceneManager.LoadScene(0);
+        if (!playerAlive) SceneManager.LoadScene(0);
         else StartCoroutine(GameLoop());
     }
 
@@ -96,7 +98,7 @@ public class GameManager : MonoBehaviour
 
         m_MessageText.text = string.Empty;
 
-        while (!OneTankLeft()) yield return null;
+        while (!OneTankLeft() & playerAlive) yield return null;
     }
 
 
@@ -105,17 +107,27 @@ public class GameManager : MonoBehaviour
         RoundEnd.Invoke();
         DisableTankControl();
 
-        m_RoundWinner = null;
+        // m_RoundWinner = null;
 
-        m_RoundWinner = GetRoundWinner();
-        if (m_RoundWinner != null) m_RoundWinner.m_Wins++;
+        // m_RoundWinner = GetRoundWinner();
+        // if (m_RoundWinner != null) m_RoundWinner.m_Wins++;
 
-        m_GameWinner = GetGameWinner();
+        // m_GameWinner = GetGameWinner();
+        if (playerAlive)
+        {
+            string message = EndMessage();
+            m_MessageText.text = message;
 
-        string message = EndMessage();
-        m_MessageText.text = message;
+            yield return m_EndWait;
+        }
+        else
+        {
+            string message = EndGameMessage();
+            m_MessageText.text = message;
 
-        yield return m_EndWait;
+            yield return m_EndWait;
+        }
+
     }
 
 
@@ -158,19 +170,34 @@ public class GameManager : MonoBehaviour
     {
         var sb = new StringBuilder();
 
-        if (m_RoundWinner != null) sb.Append($"{m_RoundWinner.m_ColoredPlayerText} WINS THE ROUND!");
-        else sb.Append("DRAW!");
+        sb.Append($"ROUND {m_RoundNumber} OVER!");
+        sb.Append("\n\n");
+        sb.Append($"Total kills: {m_KillNumber}");
 
-        sb.Append("\n\n\n\n");
+        // if (m_RoundWinner != null) sb.Append($"{m_RoundWinner.m_ColoredPlayerText} WINS THE ROUND!");
+        // else sb.Append("DRAW!");
 
-        for (int i = 0; i < m_Tanks.Length; i++)
-        {
-            sb.AppendLine($"{m_Tanks[i].m_ColoredPlayerText}: {m_Tanks[i].m_Wins} WINS");
-        }
+        // sb.Append("\n\n\n\n");
 
-        if (m_GameWinner != null)
-            sb.Append($"{m_GameWinner.m_ColoredPlayerText} WINS THE GAME!");
+        // for (int i = 0; i < m_Tanks.Length; i++)
+        // {
+        //     sb.AppendLine($"{m_Tanks[i].m_ColoredPlayerText}: {m_Tanks[i].m_Wins} WINS");
+        // }
 
+        // if (m_GameWinner != null)
+        //     sb.Append($"{m_GameWinner.m_ColoredPlayerText} WINS THE GAME!");
+
+        return sb.ToString();
+    }
+
+    private string EndGameMessage()
+    {
+        var sb = new StringBuilder();
+
+        sb.Append($"GAME OVER!");
+        sb.Append("\n");
+        sb.Append($"Total rounds: {m_RoundNumber}\n");
+        sb.Append($"Total kills: {m_KillNumber}");
         return sb.ToString();
     }
 
@@ -190,5 +217,16 @@ public class GameManager : MonoBehaviour
     private void DisableTankControl()
     {
         for (int i = 0; i < m_Tanks.Length; i++) m_Tanks[i].DisableControl();
+    }
+
+    public void addKill()
+    {
+        m_KillNumber += 1;
+        Debug.Log("Number of kills: " + m_KillNumber);
+    }
+
+    public void KillPlayer()
+    {
+        playerAlive = false;
     }
 }
