@@ -51,7 +51,6 @@ public class TankManager
         MeshRenderer[] renderers = m_Instance.GetComponentsInChildren<MeshRenderer>();
         for (int i = 0; i < renderers.Length; i++) renderers[i].material.color = m_PlayerColor;
         m_ColoredPlayerText = $"<color=#{ColorUtility.ToHtmlStringRGB(m_PlayerColor)}>PLAYER {m_PlayerNumber}</color>";
-        // for (int i = 0; i < renderers.Length; i++) renderers[i].material.color = m_PlayerColor;
     }
 
 

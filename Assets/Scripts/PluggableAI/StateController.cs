@@ -34,6 +34,7 @@ public class StateController : MonoBehaviour
         if (aiActive)
         {
             navMeshAgent.enabled = true;
+            // Set move speed based on enemyStats
             navMeshAgent.speed = enemyStats.moveSpeed;
         }
         else

@@ -41,16 +41,12 @@ public class GameManager : MonoBehaviour
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
         m_EndGameWait = new WaitForSeconds(m_EndGameDelay);
-        m_Tanks = new TankManager[10]; //max concurrent tank number
-        for (int i = 0; i < 10; i++) //max concurrent tank number
+        // Initialise tank managers for maximum number of concurrent tanks
+        m_Tanks = new TankManager[levelDescriptor.maxConcurrentTankNumber];
+        for (int i = 0; i < levelDescriptor.maxConcurrentTankNumber; i++)
         {
             m_Tanks[i] = new TankManager();
         }
-
-        // levelDescriptor.concurrentTankNumber = 3;
-
-        // SpawnAllTanks();
-        // SetCameraTargets();
 
         StartCoroutine(GameLoop());
     }
@@ -59,6 +55,7 @@ public class GameManager : MonoBehaviour
     private void SpawnAllTanks()
     {
         remainingSpawns = levelDescriptor.totalTankNumber;
+        // Set up player tank
         if (m_Tanks[0].m_Instance == null)
         {
             m_Tanks[0].m_Instance =
@@ -73,6 +70,7 @@ public class GameManager : MonoBehaviour
 
     private void spawnEnemies()
     {
+        // Sets up AI tank
         GameObject m_TankPrefab;
         for (int i = 1; i < levelDescriptor.concurrentTankNumber + 1; i++)
         {
@@ -95,21 +93,11 @@ public class GameManager : MonoBehaviour
     }
     private void respawnEnemy()
     {
+        // Finds a single inactive tank that has been initialised, and reactivates it
         foreach (TankManager m_Tank in m_Tanks)
         {
             if (!m_Tank.m_Instance.activeInHierarchy & m_Tank.m_SpawnPoint != null)
             {
-                // GameObject m_TankPrefab;
-                // if (remainingSpawns % 2 == 0)
-                // {
-                //     m_TankPrefab = m_TankPrefabs[1];
-                // }
-                // else
-                // {
-                //     m_TankPrefab = m_TankPrefabs[2];
-                // }
-                // m_Tank.m_Instance =
-                //     Instantiate(m_TankPrefab, m_Tank.m_SpawnPoint.transform.position, m_Tank.m_SpawnPoint.transform.rotation) as GameObject;
                 m_Tank.Reset();
                 remainingSpawns -= 1;
                 Debug.Log("Respawned Tank");
@@ -121,12 +109,7 @@ public class GameManager : MonoBehaviour
 
     private void SetCameraTargets()
     {
-        // Transform[] targets = new Transform[m_Tanks.Length];
-
-        // for (int i = 0; i < targets.Length; i++)
-        //     targets[i] = m_Tanks[i].m_Instance.transform;
-
-        // m_CameraControl.m_Targets = targets;
+        // Dynamically set the number of targets depending on number of concurrent tanks
         Transform[] targets = new Transform[levelDescriptor.concurrentTankNumber + 1];
 
         for (int i = 0; i < targets.Length; i++)
@@ -138,13 +121,14 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator GameLoop()
     {
+        // In each loop, spawn required number of tanks, set targets, start game
         SpawnAllTanks();
         SetCameraTargets();
         yield return StartCoroutine(RoundStarting());
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
 
-        // if (m_GameWinner != null) SceneManager.LoadScene(0);
+        // Game continues as long as player is still alive
         if (!playerAlive) SceneManager.LoadScene(0);
         else StartCoroutine(GameLoop());
     }
@@ -152,8 +136,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundStarting()
     {
-        // ResetAllTanks();
-        ResetSomeTanks();
+        ResetAllTanks();
         DisableTankControl();
 
         m_CameraControl.SetStartPositionAndSize();
@@ -179,13 +162,6 @@ public class GameManager : MonoBehaviour
     {
         RoundEnd.Invoke();
         DisableTankControl();
-
-        // m_RoundWinner = null;
-
-        // m_RoundWinner = GetRoundWinner();
-        // if (m_RoundWinner != null) m_RoundWinner.m_Wins++;
-
-        // m_GameWinner = GetGameWinner();
         if (playerAlive)
         {
             string message = EndMessage();
@@ -196,6 +172,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            // Display different message if game ends
             string message = EndGameMessage();
             m_MessageText.text = message;
 
@@ -207,8 +184,6 @@ public class GameManager : MonoBehaviour
     private bool OneTankLeft()
     {
         int numTanksLeft = 0;
-
-        // for (int i = 0; i < m_Tanks.Length; i++)
         for (int i = 0; i < levelDescriptor.concurrentTankNumber + 1; i++)
         {
             if (m_Tanks[i].m_Instance.activeSelf) numTanksLeft++;
@@ -253,9 +228,11 @@ public class GameManager : MonoBehaviour
 
     private string EndGameMessage()
     {
+        // Updates score scriptable object if new high score is reached
         bool newHighScore = score.updateScore(m_KillNumber);
         int highScore = score.highScore;
 
+        // Special message if high score reached
         if (newHighScore)
         {
             var sb = new StringBuilder();
@@ -263,7 +240,7 @@ public class GameManager : MonoBehaviour
             sb.Append($"GAME OVER!");
             sb.Append("\n");
             sb.Append($"Total rounds: {m_RoundNumber}\n");
-            sb.Append($"Total kills: {m_KillNumber}");
+            sb.Append($"Total kills: {m_KillNumber}\n");
             sb.Append($"NEW HIGH SCORE!");
             return sb.ToString();
         }
@@ -283,49 +260,44 @@ public class GameManager : MonoBehaviour
 
     private void ResetAllTanks()
     {
-        for (int i = 0; i < m_Tanks.Length; i++) m_Tanks[i].Reset();
-    }
-
-    private void ResetSomeTanks()
-    {
-        for (int i = 0; i < levelDescriptor.concurrentTankNumber + 1; i++)
-        {
-            m_Tanks[i].Reset();
-        }
+        for (int i = 0; i < levelDescriptor.concurrentTankNumber + 1; i++) m_Tanks[i].Reset();
     }
 
 
     private void EnableTankControl()
     {
-        // for (int i = 0; i < m_Tanks.Length; i++) m_Tanks[i].EnableControl();
         for (int i = 0; i < levelDescriptor.concurrentTankNumber + 1; i++) m_Tanks[i].EnableControl();
     }
 
 
     private void DisableTankControl()
     {
-        // for (int i = 0; i < m_Tanks.Length; i++) m_Tanks[i].DisableControl();
         for (int i = 0; i < levelDescriptor.concurrentTankNumber + 1; i++) m_Tanks[i].DisableControl();
     }
 
     public void addKill()
+    // Triggered by EnemyDeath event listener
     {
+        // Updating the kill score
         m_KillNumber += 1;
+        // Respawn enemies if there are still spawns available
         if (remainingSpawns > 0)
         {
-            Debug.Log("Remaining Spawns: " + remainingSpawns);
             respawnEnemy();
         }
     }
 
     public void KillPlayer()
+    // Triggered by PlayerDeath event listener
     {
         playerAlive = false;
+        // Resets the level increments
         levelDescriptor.reset();
     }
 
     private void OnApplicationQuit()
     {
+        // Resets the level increments
         levelDescriptor.reset();
     }
 }

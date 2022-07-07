@@ -974,6 +974,7 @@ MonoBehaviour:
   m_NumRoundsToWin: 5
   m_StartDelay: 3
   m_EndDelay: 3
+  m_EndGameDelay: 9
   m_CameraControl: {fileID: 1854145132}
   m_MessageText: {fileID: 168042205}
   spawnPoints:
@@ -996,7 +997,6 @@ MonoBehaviour:
   - {fileID: 1435667194}
   - {fileID: 186534019}
   - {fileID: 400458581}
-  totalTankNumber: 0
   RoundEnd:
     m_PersistentCalls:
       m_Calls:
@@ -1014,6 +1014,7 @@ MonoBehaviour:
         m_CallState: 2
   GodMode: 0
   levelDescriptor: {fileID: 11400000, guid: 99593e72edde64ded9d87f9b57e188ad, type: 2}
+  score: {fileID: 11400000, guid: 7d7fcb02b28b2417eb9605c83c049c5e, type: 2}
 --- !u!4 &1306993284
 Transform:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ public class TankHealth : MonoBehaviour
     private bool m_Dead;
     public UnityEvent enemyDeath;
     public UnityEvent playerDeath;
+    public LevelDescriptor levelDescriptor;
     public bool GodMode = false;
 
 
@@ -68,7 +69,8 @@ public class TankHealth : MonoBehaviour
         m_Dead = true;
 
         m_ExplosionParticles.transform.position = transform.position;
-        if (Random.Range(0f, 1f) > 0.5f)
+        //  Random chance of dropping a health pack if enemy dies
+        if (Random.Range(0f, 1f) < levelDescriptor.healthPackProbability & gameObject.tag != "Player")
         {
             Instantiate(healthPackPrefab, transform.position + new Vector3(0f, 1.5f, 0f), Quaternion.identity);
         }
@@ -76,6 +78,7 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
         gameObject.SetActive(false);
+        // Trigger game events
         if (gameObject.tag == "EnemyScanner" | gameObject.tag == "EnemyChaser")
         {
             enemyDeath.Invoke();

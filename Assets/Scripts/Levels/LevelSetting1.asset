@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06eee9f36792e419ea15041684a60a8c, type: 3}
   m_Name: LevelSetting1
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 3.5
   attackRange: 1
   attackForce: 15
-  concurrentTankNumber: 2
-  totalTankNumber: 2
+  concurrentTankNumber: 1
+  totalTankNumber: 1
   speedIncrement: 1
   attackRangeIncrement: 0.5
   attackForceIncrement: 1
   concurrentTankNumberIncrement: 1
-  totalTankNumberIncrement: 1
+  totalTankNumberIncrement: 2
+  maxConcurrentTankNumber: 20
   stats: {fileID: 11400000, guid: 5d4c0800db61f85488f414b873227a7d, type: 2}
